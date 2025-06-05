@@ -1,6 +1,6 @@
 gcp_region              = "us-central1"
 project_id              = "sh-0001-analytics-460921"
-artifact_registry_image = "us-central1-docker.pkg.dev/sh-0001-analytics-460921/0001/us-stock-time-series-stream-producer:0.0.1"
+artifact_registry_image = "gcr.io/sh-0001-analytics-460921/us-stock-time-series-stream-producer:0.0.1"
 gcs_bucket              = "us_stock_time_series"
 alpha_vantage_api_key   = "TGH4R6V3P6D14NYI"
 bigquery_dataset_id     = "us_stock_time_series"

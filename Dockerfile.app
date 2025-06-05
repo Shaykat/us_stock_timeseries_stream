@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster  # Choose a Python version supported by Cloud Run
+FROM python:3.9-slim-buster
 
 # Set the working directory to /app
 WORKDIR /app

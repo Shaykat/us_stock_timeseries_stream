@@ -1,0 +1,6 @@
+gcp_region              = "us-central1"
+project_id              = "sh-0001-analytics-460921"
+artifact_registry_image = "us-central1-docker.pkg.dev/sh-0001-analytics-460921/0001/fetch-arrivals-image:latest"
+gcs_bucket              = "us_stock_time_series"
+alpha_vantage_api_key   = "TGH4R6V3P6D14NYI"
+bigquery_dataset_id     = "us_stock_time_series"

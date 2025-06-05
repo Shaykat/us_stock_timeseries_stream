@@ -1,0 +1,62 @@
+[
+  {
+    "name": "symbol",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Stock symbol (e.g., AAPL)"
+  },
+  {
+    "name": "date_time",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED",
+    "description": "Date and time of the stock data point (US/Eastern)"
+  },
+  {
+    "name": "open",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Opening price"
+  },
+  {
+    "name": "high",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Highest price during the interval"
+  },
+  {
+    "name": "low",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Lowest price during the interval"
+  },
+  {
+    "name": "close",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Closing price"
+  },
+  {
+    "name": "volume",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "Volume of shares traded"
+  },
+  {
+    "name": "last_refreshed_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the data was last refreshed"
+  },
+  {
+    "name": "time_zone",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Time zone of the data (e.g., US/Eastern)"
+  },
+    {
+    "name": "date",
+    "type": "DATE",
+    "mode": "NULLABLE",
+    "description": "Date of the stock, to support time travel"
+  }
+]

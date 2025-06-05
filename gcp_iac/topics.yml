@@ -1,0 +1,4 @@
+time_series_intraday_topic:
+  topic_name: "time-series-intraday"
+  schema_name: "time_series_intraday_schema"
+  avro_schema_definition: "pubsub_schemas/time_series_intraday_schema.avsc"

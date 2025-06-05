@@ -10,4 +10,5 @@ terraform {
 provider "google" {
   project = var.project_id
   region  = var.gcp_region
+  credentials = file("/home/nawrin995/sh-0001-analytics-460921-65f7785bcfbd.json")
 }

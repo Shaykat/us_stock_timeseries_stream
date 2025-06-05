@@ -1,3 +1,23 @@
+# Enable Required services API 
+resource "google_project_service" "cloud_resource_manager" {
+  service            = "cloudresourcemanager.googleapis.com"
+  disable_on_destroy = false
+  disable_dependent_services = false
+  project = var.project_id
+}
+
+resource "google_project_service" "pubsub" {
+  service            = "pubsub.googleapis.com"
+  disable_on_destroy = false
+  project = var.project_id
+}
+
+resource "google_project_service" "cloud_run" {
+  service            = "run.googleapis.com"
+  disable_on_destroy = false
+  project = var.project_id
+}
+
 # Pub/Sub Topic
 # Read yaml as local object
 locals {

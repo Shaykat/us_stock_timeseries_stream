@@ -11,7 +11,7 @@ resource "google_cloud_run_v2_service" "default" {
       }
       env {
         name  = "API_KEY"
-        value = var.alpha_vantage_api_key
+        value = var.api_key
       }
 
       resources {
@@ -34,8 +34,9 @@ resource "google_cloud_run_v2_service" "default" {
 }
 
 # IAM binding to allow the Cloud Run service to publish to the Pub/Sub topic
+# members = ["serviceAccount:${google_cloud_run_v2_service.default.service_account}"]
 resource "google_pubsub_topic_iam_binding" "cloud_run_pubsub" {
   topic   = var.pubsub_topic #reference the pubsub_topic variable
   role    = "roles/pubsub.publisher"
-  members = ["serviceAccount:${google_cloud_run_v2_service.default.service_account}"]
+  members = ["user:nawrin995@gmail.com"]
 }

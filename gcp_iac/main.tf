@@ -1,7 +1,7 @@
 # Pub/Sub Topic
 # Read yaml as local object
 locals {
-  pubsub_topics = yamldecode(file("topics.yaml"))
+  pubsub_topics = yamldecode(file("topics.yml"))
 }
 
 # Deploy the topics using the Pub/Sub module and for_each

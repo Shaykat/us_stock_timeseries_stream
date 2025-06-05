@@ -51,7 +51,7 @@ variable "min_instance_count" {
 variable "max_instance_count" {
   type        = number
   description = "The maximum number of instances for the Cloud Run service."
-  default     = 5
+  default     = 2
 }
 
 variable "pubsub_topic" {

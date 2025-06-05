@@ -28,6 +28,6 @@ variable "bigquery_dataset_id" {
 
 variable "alpha_vantage_api_key" {
   type        = string
-  description = "The TfL API key."
+  description = "Alpha Vantage API key."
   sensitive   = true  # Mark as sensitive
 }

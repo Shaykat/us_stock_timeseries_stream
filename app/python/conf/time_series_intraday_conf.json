@@ -1,0 +1,9 @@
+{
+    "PROJECT_ID": "ssh-0001-analytics",
+    "TOPIC_ID": "us_stock_intraday_time_series",
+    "SCHEMA_PATH": "./schema/time_series_intraday_schema.avsc",
+    "SYMBOL_LIST": ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "TEM", "VEEV", "CRM"],
+    "INTERVAL": "5min",
+    "API_END_POINT": "https://www.alphavantage.co/query",
+    "FUNCTION": "TIME_SERIES_INTRADAY"
+}

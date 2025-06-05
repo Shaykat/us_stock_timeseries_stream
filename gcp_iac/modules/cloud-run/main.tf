@@ -11,7 +11,7 @@ resource "google_cloud_run_v2_service" "default" {
       }
       env {
         name  = "API_KEY"
-        value = var.api_key
+        value = var.alpha_vantage_api_key
       }
 
       resources {

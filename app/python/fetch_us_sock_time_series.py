@@ -5,18 +5,19 @@ import logging
 import requests
 from datetime import datetime
 from google.cloud import pubsub_v1
-from avro.io import BinaryEncoder, DatumWriter
 import avro.schema as schema
-from google.api_core.exceptions import NotFound
-from google.cloud.pubsub import PublisherClient
+from avro.io import BinaryEncoder, DatumWriter
 from google.pubsub_v1.types import Encoding
+from google.api_core.exceptions import NotFound
 
 # Configure Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+
 class AlphaVantageAPIError(Exception):
     """Custom exception for Alpha Vantage API errors."""
     pass
+
 
 def publish_message_binary(project_id, topic_id, schema_path, messages_data):
     publisher = pubsub_v1.PublisherClient()
@@ -31,13 +32,13 @@ def publish_message_binary(project_id, topic_id, schema_path, messages_data):
         futures = []
         for message_data in messages_data:
             try:
-                logging.info(f"Attempting to serialize message data: {message_data}")
+                logging.info(f"Attempting to serialize message data for symbol: {message_data['symbol']}")
                 writer = DatumWriter(avro_schema)
                 bout = io.BytesIO()
                 encoder = BinaryEncoder(bout)
                 writer.write(message_data, encoder)
                 data = bout.getvalue()
-                logging.info(f"Preparing a binary-encoded message:\n{data.decode()}")
+                logging.info(f"Preparing a binary-encoded message for symbol: {message_data['symbol']}")
 
                 future = publisher.publish(topic_path, data)
                 futures.append(future)
@@ -54,11 +55,11 @@ def publish_message_binary(project_id, topic_id, schema_path, messages_data):
     except Exception as e:
         logging.error(f"Error publishing message: {e}")
 
-def fetch_stock_data(api_key, symbol, interval):
+
+def fetch_stock_data(url, api_function, api_key, symbol, interval):
     try:
-        url = "https://www.alphavantage.co/query"
         params = {
-            "function": "TIME_SERIES_INTRADAY",
+            "function": api_function,
             "symbol": symbol,
             "apikey": api_key,
             "interval": interval,
@@ -87,6 +88,7 @@ def fetch_stock_data(api_key, symbol, interval):
     except Exception as e:
         logging.exception(f"An unexpected error occurred: {e}")
         return None  # Return None to avoid crashing
+
 
 def format_stock_data(raw_data):
     if not isinstance(raw_data, dict):
@@ -117,40 +119,56 @@ def format_stock_data(raw_data):
             formatted_data.append(formatted_data_point)
         except Exception as e:
             logging.warning(f"Error formatting data point for date {date}: {e}. Skipping this entry.")
-            continue  # Skip to the next entry
+            continue 
 
     logging.info(f"Formatted {len(formatted_data)} daily stock data points.")
     return formatted_data
 
+
+def parse_json_config(config_path):
+    try:
+        with open(config_path, "r") as config_file:
+            config = json.load(config_file)
+        return config
+    except FileNotFoundError:
+        logging.error(f"Configuration file not found at path: {config_path}")
+        return None
+    except json.JSONDecodeError as e:
+        logging.error(f"Error decoding JSON in configuration file: {e}")
+        return None
+
+
 def main():
-    project_id = "ssh-0001-analytics-ist"
-    topic_id = "us_stock_intraday_time_series"
-    schema_path = "/content/time_series_intraday_schema.avsc"
+    conf_path = os.path.abspath("conf/time_series_intraday_conf.json")
+    config = parse_json_config(conf_path)
+
+    project_id = config.get("PROJECT_ID", "ssh-0001-analytics-ist")
+    topic_id = config.get("TOPIC_ID", "us_stock_intraday_time_series")
+    symbol_list = config.get("SYMBOL_LIST", ["AAPL", "MSFT", "GOOGL"])
+    interval = config.get("INTERVAL", "5min")
+    api_end_point = config.get("API_END_POINT", "https://www.alphavantage.co/query") 
+    function=config.get("FUNCTION", "TIME_SERIES_INTRADAY")
+
+
+    schema_path = os.path.abspath("schema/time_series_intraday_schema.avsc")
     api_key = os.environ.get("ALPHAVANTAGE_API_KEY", "TGH4R6V3P6D14NYI")
     if not api_key:
         logging.error("ALPHAVANTAGE_API_KEY environment variable not set.")
         return
+    for symbol in symbol_list:
+        try:
+            raw_data = fetch_stock_data(api_end_point, function, api_key, symbol, interval)
+            formatted_data = format_stock_data(raw_data)
 
-    symbol = "AAPL"
-    interval = "5min"
-
-    try:
-        raw_data = fetch_stock_data(api_key, symbol, interval)
-
-        # Format the data
-        formatted_data = format_stock_data(raw_data)
-
-        if formatted_data:
-            print(json.dumps(formatted_data, indent=2))  # Pretty print the JSON output
-            # Here, you could publish the formatted_data to Pub/Sub
-            publish_message_binary(project_id, topic_id, schema_path, formatted_data)
-        else:
-            logging.warning("No stock data to output.")
-
-    except AlphaVantageAPIError as e:
-        logging.error(f"Failed to process stock data: {e}")
-    except Exception as e:
-        logging.exception(f"An unexpected error occurred in main: {e}")
+            if formatted_data:
+                publish_message_binary(project_id, topic_id, schema_path, formatted_data)
+            else:
+                logging.warning("No stock data to output.")
+        except AlphaVantageAPIError as e:
+            logging.error(f"Failed to process stock data: {e}")
+        except Exception as e:
+            logging.exception(f"An unexpected error occurred in main: {e}")
+    
 
 if __name__ == "__main__":
     main()

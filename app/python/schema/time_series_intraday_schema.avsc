@@ -1,0 +1,80 @@
+{
+  "type": "record",
+  "name": "time_series_intraday",
+  "fields": [
+    {
+      "name": "symbol",
+      "type": "string",
+      "doc": "Stock symbol (e.g., AAPL)"
+    },
+    {
+      "name": "date_time",
+      "type": "string",
+      "doc": "Date and time of the stock data point (US/Eastern) - ISO 8601 String format"
+    },
+    {
+      "name": "open",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "Opening price"
+    },
+    {
+      "name": "high",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "Highest price during the interval"
+    },
+    {
+      "name": "low",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "Lowest price during the interval"
+    },
+    {
+      "name": "close",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "Closing price"
+    },
+    {
+      "name": "volume",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "Volume of shares traded"
+    },
+    {
+      "name": "last_refreshed_at",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "Timestamp when the data was last refreshed - ISO 8601 String format"
+    },
+    {
+      "name": "time_zone",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "Time zone of the data (e.g., US/Eastern)"
+    },
+    {
+        "name": "date",
+        "type": [
+            "null",
+            "string"
+        ],
+        "doc": "Date of the stock, to support time travel"
+    }
+  ]
+}
